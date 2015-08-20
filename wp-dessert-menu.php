@@ -1,25 +1,16 @@
 <?php
 
 /**
- * WP Dessert Menu
- *
- * Grabs a WordPress Navigation Menu, and puts it in your Admin Bar
- *
- * @package WP_Dessert_Menu
- * @subpackage Main
- */
-
-/**
  * Plugin Name: WP Dessert Menu
- * Plugin URI: http://wordpress.org/extend/plugins/wp-dessert-menu/
- * Description: Grabs a WordPress Navigation Menu, and puts it in your Admin Bar
- * Author: johnjamesjacoby
- * Author URI: http://johnjamesjacoby.com
- * Version: 1.0.1
+ * Plugin URI:  http://wordpress.org/extend/plugins/wp-dessert-menu/
+ * Description: Put a WordPress navigation menu in your admin toolbar
+ * Author:      John James Jacoby
+ * Author URI:  http://jjj.me
+ * Version:     1.1.0
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /** Example Function - Start Copying ******************************************/
 
@@ -39,15 +30,16 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @since WP_Dessert_Menu 1.0
  *
- * @param WP_Admin_bar $wp_admin_bar The WordPress Admin bar
+ * @param WP_Admin_Bar $wp_admin_bar The WordPress Admin bar
  *
  * @uses wp_dessert_menu To add a specific navigation menu to the admin bar
  */
-function wp_dessert_menu_quick_links( &$wp_admin_bar ) {
+function wp_dessert_menu_quick_links( WP_Admin_Bar $wp_admin_bar ) {
 
 	// Sanity check on admin bar global
-	if ( !is_object( $wp_admin_bar ) )
+	if ( ! is_object( $wp_admin_bar ) ) {
 		return;
+	}
 
 	/**
 	 * You can put other logic here, like is_user_logged_in() checks to have
@@ -60,7 +52,7 @@ function wp_dessert_menu_quick_links( &$wp_admin_bar ) {
 	$menu_link  = home_url();          // The link for the root menu item
 
 	// This actually adds the menu.
-	wp_dessert_menu( &$wp_admin_bar, $menu_name, $menu_title, $menu_link );
+	wp_dessert_menu( $wp_admin_bar, $menu_name, $menu_title, $menu_link );
 }
 add_action( 'admin_bar_menu', 'wp_dessert_menu_quick_links', 1000 );
 
@@ -74,24 +66,27 @@ add_action( 'admin_bar_menu', 'wp_dessert_menu_quick_links', 1000 );
  *
  * @since WP_Dessert_Menu 1.0
  *
- * @param WP_Admin_bar $wp_admin_bar The WordPress Admin bar
+ * @param WP_Admin_Bar $wp_admin_bar The WordPress Admin bar
  * @param string $menu_name The name of the menu you want to grab
  * @param string $menu_title The text of the root menu item
  * @param string $menu_link The link for the root menu item
  */
-function wp_dessert_menu( &$wp_admin_bar, $menu_name = 'Quick Links', $menu_title = 'Quick Links', $menu_link = '#' ) {
+function wp_dessert_menu( WP_Admin_Bar $wp_admin_bar, $menu_name = 'Quick Links', $menu_title = 'Quick Links', $menu_link = '#' ) {
 
 	// Sanity check on admin bar global
-	if ( !is_object( $wp_admin_bar ) )
+	if ( ! is_object( $wp_admin_bar ) ) {
 		return;
+	}
 
 	// Look for menu with the title passed, bail if empty
-    if ( !$menu = wp_get_nav_menu_object( $menu_name ) )
+    if ( ! $menu = wp_get_nav_menu_object( $menu_name ) ) {
 		return;
+	}
 
 	// Get the menu items, bail if empty
-	if ( !$menu_items = wp_get_nav_menu_items( $menu->term_id ) )
+	if ( ! $menu_items = wp_get_nav_menu_items( $menu->term_id ) ) {
 		return;
+	}
 
 	// Add the root menu
     $wp_admin_bar->add_menu( array(
@@ -117,5 +112,3 @@ function wp_dessert_menu( &$wp_admin_bar, $menu_name = 'Quick Links', $menu_titl
         ) );
     }
 }
-
-?>
